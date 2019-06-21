@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1561110052953.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5DF1C4A1",
+    "lastKnownWriteTime" : 1561109885,
+    "last_content_update" : 1561109885,
+    "path" : "~/github/dauphine/docs/Report.Rmd",
+    "project_path" : "docs/Report.Rmd",
+    "properties" : {
+        "working_dir" : "project"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

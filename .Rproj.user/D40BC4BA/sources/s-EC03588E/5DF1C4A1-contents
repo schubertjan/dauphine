@@ -1,0 +1,76 @@
+---
+title: "How Much Do Results From Dauphine Predict Results At The Tour?"
+author: "Jan Schubert"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(data.table)
+library(DT)
+```
+
+#### About the data
+This document looks at how much the overall results from Dauphine predict overall results at The Tour. The data has been taken from [ProCyclingStats](https://www.procyclingstats.com/) and includes races between years 2000 and 2018. We also compare the predictive power with the results from another popular pre-Tour race - Tour De Suisse - and from previous the performance at The Tour.
+
+
+```{r data load}
+dat <- fread("./data/data.csv")
+```
+
+
+#### Summary 
+The Table below shows the percentage of riders finishing in top 10, top 3 or top 1 at Dauphine/Tour De Suisse/last year's Tour and at the same time finishing at top 10, top 3 or winning The Tour. For example, about 33% riders who finished in top 10 at Dauphine went on and finished in top 10 at the Tour in the same year and about 41% of riders who finished in top 10 at The Tour the year before went to finish in top 10 the next year. Whilst Dauphine has a stronger predictive power than Tour De Suisse, it doesn't trump the previous position at The Tour which is the best predictor. 
+
+```{r table}
+## crate variable for looking at previous TDF results
+dat[, Rnk.Tour.prev := shift(Rnk.Tour), by = Rider]
+dat <- dat[, c("Year", "Rider", "Rnk.Dauphine", "Rnk.TourDeSuisse", "Rnk.Tour.prev", "Rnk.Tour")]
+
+
+
+#top10
+## Dauphine
+top10_D <-  nrow(dat[Rnk.Dauphine %in% c(1:10) & Rnk.Tour %in% c(1:10), ]) / nrow(dat[Rnk.Dauphine %in% c(1:10), ])
+
+## Tour De Suisse
+top10_S <- nrow(dat[Rnk.TourDeSuisse %in% c(1:10) & Rnk.Tour %in% c(1:10), ]) / nrow(dat[Rnk.TourDeSuisse %in% c(1:10), ])
+
+## Previous performance at The Tour
+top10_T <- nrow(dat[Rnk.Tour.prev %in% c(1:10) & Rnk.Tour %in% c(1:10), ]) / nrow(dat[Rnk.Tour.prev %in% c(1:10), ])
+
+
+
+#podium 
+## Dauphine
+top3_D <-  nrow(dat[Rnk.Dauphine %in% c(1:3) & Rnk.Tour %in% c(1:3), ]) / nrow(dat[Rnk.Dauphine %in% c(1:3), ])
+
+## Tour De Suisse
+top3_S <- nrow(dat[Rnk.TourDeSuisse %in% c(1:3) & Rnk.Tour %in% c(1:3), ]) / nrow(dat[Rnk.TourDeSuisse %in% c(1:3), ])
+
+## Previous performance at The Tour
+top3_T <- nrow(dat[Rnk.Tour.prev %in% c(1:3) & Rnk.Tour %in% c(1:3), ]) / nrow(dat[Rnk.Tour.prev %in% c(1:3), ])
+
+
+
+#top 1
+## Dauphine
+top1_D <-  nrow(dat[Rnk.Dauphine %in% c(1) & Rnk.Tour %in% c(1), ]) / nrow(dat[Rnk.Dauphine %in% c(1), ])
+
+## Tour De Suisse
+top1_S <- nrow(dat[Rnk.TourDeSuisse %in% c(1) & Rnk.Tour %in% c(1), ]) / nrow(dat[Rnk.TourDeSuisse %in% c(1), ])
+
+## Previous performance at The Tour
+top1_T <- nrow(dat[Rnk.Tour.prev %in% c(1) & Rnk.Tour %in% c(1), ]) / nrow(dat[Rnk.Tour.prev %in% c(1), ])
+
+
+df <- data.frame(top10 = round(c(top10_D, top10_S, top10_T)*100, 0), top3 = round(c(top3_D, top3_S, top3_T)*100,0), top1 = round(c(top1_D, top1_S, top1_T)*100,0))
+rownames(df) <- c("Dauphine", "Tour De Suisse", "Last year's position at The Tour")
+datatable(df)
+```
+
+
+#### Here is all the data used in the analysis
+
+```{r whole data}
+datatable(dat, filter = list(position = "top"))
+```
