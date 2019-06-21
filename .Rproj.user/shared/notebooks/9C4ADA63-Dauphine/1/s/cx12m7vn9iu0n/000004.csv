@@ -1,0 +1,2 @@
+"0","dat <- fread(""./data/data.csv"")"
+"0","dat <- dat[, c(""Year"", ""Rider"", ""Rnk.Dauphine"", ""Rnk.TourDeSuisse"", ""Rnk.Tour"")]"
